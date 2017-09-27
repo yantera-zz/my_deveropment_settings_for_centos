@@ -1,0 +1,8 @@
+---
+- name: zsh install
+  yum:
+    name: zsh
+    state: latest
+
+- name: change login shell to zsh
+  command: chsh -s /bin/zsh

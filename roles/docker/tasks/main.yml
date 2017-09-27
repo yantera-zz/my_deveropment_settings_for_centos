@@ -1,0 +1,53 @@
+---
+- name: docker is remove for yum
+  yum:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - docker
+    - docker-common
+    - container-selinux
+    - docker-selinux
+    - docker-engine
+    - docker-engine-selinux
+
+- name: install yum-config-manager
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+
+- name: add docker community edition repository
+  command: sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: make yum repository cashe
+  command: sudo yum makecache fast
+
+- name: install docker
+  yum:
+    name: docker-ce
+    state: present
+
+- name: docker start
+  systemd:
+    name: docker.service
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+
+- name: get docker compose
+  command: curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+
+- name: change permition for docker compose
+  command: chmod +x /usr/local/bin/docker-compose
+
+- name: add group docker
+  group:
+    name: docker
+    state: present
+
+- name: add user for docker group
+  command: sudo gpasswd -a `who -q | awk 'NR == 1'` docker

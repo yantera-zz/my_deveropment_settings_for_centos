@@ -1,0 +1,21 @@
+---
+- name: tmux liblary
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - ncurses-devel
+    - libevent
+    - libevent-devel
+
+- name: get tmux file
+  get_url:
+    url: https://github.com/tmux/tmux/releases/download/2.5/tmux-2.5.tar.gz
+    dest: /usr/local/src
+
+- name: compaile tmux
+  command: >
+    cd /usr/local/src;
+    ./configure --prefix=/usr/local/tmux-2.5;
+    make;
+    make install;

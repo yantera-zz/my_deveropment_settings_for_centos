@@ -1,0 +1,11 @@
+---
+- name: rpm highway.repo
+  copy:
+    src: hnakamur-highway.repo
+    dest: /etc/yum.repos.d/hnakamur-highway.repo
+
+- name: install highway
+  yum:
+    name: highway
+    state: present
+  become: yes

@@ -1,0 +1,36 @@
+---
+- name: remove vim
+  yum:
+    name: vim
+    state: absent
+
+- name: group install
+  yum:
+    name: "@Development tools"
+    state: present
+
+- name: install items
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - ncurses
+    - ncurses-devel
+    - wget
+    - git
+    - gtk2-devel
+    - atk-devel
+    - libX11-devel
+    - libXt-devel
+
+- name: git clone vim
+  git:
+    repo: https://github.com/vim/vim.git
+    dest: /usr/local/src
+
+- name: compile vim
+  command: >
+    cd=/usr/local/src/vim;
+    ./configure --enable-multibyte --with-features=huge --enable-cscope --enable-gui=gtk2 --disable-selinux --prefix=/usr/local --enable-xim --enable-fontset --enable-gpm --enable-rubyinterp;
+    make;
+    make install;

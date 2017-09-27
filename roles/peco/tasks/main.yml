@@ -1,0 +1,11 @@
+---
+- name: get peco file
+  get_url:
+    url: https://github.com/peco/peco/releases/download/v0.5.1/peco_linux_amd64.tar.gz
+    dest: /tmp
+
+- name: unzip peco file
+  command: tar xvzf /tmp/peco_linux_amd64.tar.gz -C /tmp
+
+- name: copy peco file
+  command: cp /tmp/peco_linux_amd64/peco /usr/local/bin/
